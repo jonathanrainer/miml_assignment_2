@@ -1,5 +1,4 @@
-function at_matrix = generate_at_matrix(matrix_size, ...
-    interaction_prob, d, mode, sigma)
+function at_matrix = generate_at_matrix(matrix_size, c, d, mode, sigma)
 %GENERATE_AT_MATRIX This function should generate random matrices that
 %correspond to the conditions laid down in Allesian & Tang
 %
@@ -9,22 +8,32 @@ function at_matrix = generate_at_matrix(matrix_size, ...
 %       0 = None 
 %       1 = Predator/Prey
 %       2 = Mutualism
-%
-    at_matrix = normrnd(1,sigma,matrix_size, matrix_size);
-    at_matrix = matrix_replacement(at_matrix, interaction_prob, mode);
-    assert(mode == 0 || mode == 2 || ...
-        isequal((triu(at_matrix, 1) == 0)', (tril(at_matrix,-1) == 0)));
-    at_matrix = at_transform(at_matrix, mode);
-    assert(mode == 0 || mode == 2 ||  ... 
-        isequal((triu(at_matrix, 1) > 0)', (tril(at_matrix,-1) < 0)) ...
-        && isequal((triu(at_matrix, 1) < 0)', (tril(at_matrix,-1) > 0)))
-    zero_mask = (at_matrix ~= 0);
-    pos_compare = isequal((triu(at_matrix,1).*tril(zero_mask,-1)') > 0, ...
-        (tril(at_matrix,-1).*triu(zero_mask,1)' > 0)');
-    neg_compare = isequal((triu(at_matrix,1).*tril(zero_mask,-1)') < 0, ...
-        (tril(at_matrix,-1).*triu(zero_mask,1)' < 0)');
-    assert(mode == 0 || mode == 1 || (pos_compare && neg_compare));
-    at_matrix = (at_matrix .* (ones(matrix_size) - eye(matrix_size)) ...
-        + (eye(matrix_size).*-d));
+
+    uniform_rands = rand(matrix_size, matrix_size);
+    switch mode
+        case 0
+            creation_mask = (uniform_rands <= c) .* ~eye(matrix_size);
+            at_matrix = normrnd(0,sigma,matrix_size,matrix_size)  ... 
+                .* creation_mask;
+            at_matrix = at_matrix + (eye(matrix_size) .* -d);
+        case 1
+            creation_mask = triu(uniform_rands <= c, 1);
+            zero_mask = creation_mask == 0;
+            uniform_rands_2 = rand(matrix_size, matrix_size);
+            pos_mask = (uniform_rands_2 .* creation_mask) >= 0.5;
+            neg_mask = (uniform_rands_2 .* creation_mask) < 0.5 - zero_mask;
+            pos_random_numbers = abs(normrnd(0,sigma,matrix_size,matrix_size));
+            neg_random_numbers = -abs(normrnd(0,sigma,matrix_size,matrix_size));
+            at_matrix = (pos_mask .* pos_random_numbers) + ...
+                (pos_mask' .* neg_random_numbers) + ... 
+                (neg_mask .* neg_random_numbers) + ...
+                (neg_mask' .* pos_random_numbers);
+            at_matrix = at_matrix + -d * eye(matrix_size);
+        case 2
+            creation_mask = triu(uniform_rands <=c, 1);
+            norm_rnds = abs(normrnd(0,sigma,matrix_size,matrix_size));
+            at_matrix = creation_mask .* norm_rnds + ... 
+                (-d .* eye(matrix_size)) + creation_mask' .* norm_rnds;
+    end
 end
 
