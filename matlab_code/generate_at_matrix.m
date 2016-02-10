@@ -1,5 +1,5 @@
 function at_matrix = generate_at_matrix(matrix_size, ...
-    interaction_prob, d, mode)
+    interaction_prob, d, mode, sigma)
 %GENERATE_AT_MATRIX This function should generate random matrices that
 %correspond to the conditions laid down in Allesian & Tang
 %
@@ -10,7 +10,7 @@ function at_matrix = generate_at_matrix(matrix_size, ...
 %       1 = Predator/Prey
 %       2 = Mutualism
 %
-    at_matrix = randn(matrix_size, matrix_size);
+    at_matrix = normrnd(1,sigma,matrix_size, matrix_size);
     at_matrix = matrix_replacement(at_matrix, interaction_prob, mode);
     assert(mode == 0 || mode == 2 || ...
         isequal((triu(at_matrix, 1) == 0)', (tril(at_matrix,-1) == 0)));
