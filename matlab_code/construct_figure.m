@@ -1,11 +1,23 @@
-clf
-% Need to change the third one, it's just an estimate for now.
+% Create a new figure and set up its position and size so the plots are the
+% right shape.
+f = figure(1);
+set(f, 'Position', [100, 100, 1200, 400])
+% Store some parameters so it's easier to run the commands to subplot in a
+% loop.
 critical_stabilities = [1, pi/(pi-2), pi/(pi+2)]; 
 initial_sigma = [0.1, 0.5, 0.1];
+titles = {'Random', 'Predator/Prey', 'Mixture'};
+% Iterate over the modes to generate, generate the eigenvalues and plot the
+% spectra, each in their own pane of the subplot.
+daspect([1,1,1]);
 for i=1:3
-    subplot(2,3,i)
-    plot_eigen_spectra(generate_eigenvalues(10,250, 0.25, 1,i-1,1));
-    subplot(2,3,i+3)
-    plot_stability_graph(250, 0.5, initial_sigma(i), 1, i-1, ...
-        critical_stabilities(i), 20, 25);
+    subplot(1,3,i)
+    hold on
+    plot_eigen_spectra(generate_eigenvalues(10,250, 0.25, 1,i-1,1), ...
+        'random');
+    % Add in a line to indicate the centre of the shapes.
+    vline(-1)
+    % Add titles to each of the subfigures.
+    title(titles{i});
+    hold off
 end
