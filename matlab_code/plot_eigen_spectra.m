@@ -1,8 +1,8 @@
 function [] = plot_eigen_spectra(eigenvalues)
 %PLOT_EIGEN_SPECTRA Summary of this function goes here
 %   Detailed explanation goes here
-    clf
     hold on
+    
     for i=1:size(eigenvalues,2)
         plot_size = round(sqrt(size(eigenvalues,1))) + 4;
         % Plot Imag vs Real
