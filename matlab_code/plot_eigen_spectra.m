@@ -2,7 +2,6 @@ function [] = plot_eigen_spectra(eigenvalues)
 %PLOT_EIGEN_SPECTRA Summary of this function goes here
 %   Detailed explanation goes here
     hold on
-    
     for i=1:size(eigenvalues,2)
         plot_size = round(sqrt(size(eigenvalues,1))) + 4;
         % Plot Imag vs Real
@@ -11,6 +10,7 @@ function [] = plot_eigen_spectra(eigenvalues)
     hold off
     axis([-plot_size plot_size -plot_size plot_size])
     grid
+    axis equal
     set(gca,'xtick',-plot_size:1:plot_size, ...
         'ytick',-plot_size:1:plot_size);
     xlabel('Re');
