@@ -34,8 +34,8 @@ function at_matrix = generate_at_matrix(matrix_size, c, d, mode, sigma)
             % lower, taking out those numbers below the central diagonal
             % that should be zero anyway.
             pos_mask = (uniform_rands_2 .* creation_mask) >= 0.5;
-            neg_mask = (uniform_rands_2 .* creation_mask) < ...
-                (0.5 - zero_mask);
+            neg_mask = ((uniform_rands_2 .* creation_mask) < 0.5) ...
+                - zero_mask;
             % Turn these masks into upper triangular random matrices with
             % numbers draw from the correct distributions.
             pos_random_numbers =  ...
@@ -46,8 +46,8 @@ function at_matrix = generate_at_matrix(matrix_size, c, d, mode, sigma)
             % their corresponding generated random numbers as well as
             % matching their transposes with the opposite generated random
             % numbers to produce the +/-, -/+ pairs that are required.
-            at_matrix = (pos_mask + neg_mask' .* pos_random_numbers) + ...
-                (pos_mask' + neg_mask .* neg_random_numbers);
+            at_matrix = ((pos_mask + neg_mask') .* pos_random_numbers) + ...
+                ((pos_mask' + neg_mask) .* neg_random_numbers);
         % mode = 2 -> Mixture Case 
         case 2
             % Similar process to case 1
