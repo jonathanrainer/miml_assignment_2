@@ -6,13 +6,14 @@
 \usepackage{enumitem}
 \usepackage{longtable}
 \usepackage{amsmath}
-\usepackage{minted}
 \usepackage{listings}
 \usepackage{framed}
 \usepackage{graphicx}
 \usepackage[toc,page]{appendix}
 \usepackage{lscape}
 \usepackage{rotating}
+\usepackage[numbers]{natbib}
+\usepackage[numbered, framed]{mcode}
 
 \title{Assignment \#2 - Random Parameter Values, Random Matrices \& Monte-Carlo Integration}   
 \date{\today}
@@ -29,14 +30,24 @@
 	\renewcommand{\footrulewidth}{0pt}
 	\maketitle
 	
+	\setcounter{chapter}{1}
 	\begin{enumerate}
-		\item Using the May-like random matrices developed in Week 5 Practical, and incorporating the sign structure used in the Aleesina and Tang interpretation of predator-prey and mutualistic interactions, verify numerically the key result of Allesina and Tang (2012). 
+	
+		\item Using the May-like random matrices developed in Week 5 Practical, and incorporating the sign structure used in the \citet{Allesina2012} interpretation of predator-prey and mixture interactions, verify numerically the key result of \cite{Allesina2012}.
 		
-		[I.E. Show that under the assumtpions of Allesina and Tang (2012), predator-prey interactions are stabilising, and mutualistic interactions are destabilising.]
+		[I.E. Show that under the assumptions of \cite{Allesina2012}, predator-prey interactions are stabilising, and mixture interactions are destabilising.]
 		
+		In order to verify the result of Allesina and Tang we first need to generate the same random matrices that they did so that we can produce eigen-spectra in a similar manner to ones they did. In order to do so we turn to the supplementary material \cite{Allesina2012} of the paper where there are instructions given as to how the matrices of each type are to be generated. The code that produces these matrices can be seen in Figure \ref{lst:generate_at_matrix}. Then using these generated matrices we can re-create the plots that are found in Figure 1 of \cite{Allesina2012}. The code that generated these plots can be seen in Figure \ref{lst:generate_eigenvalues} and \ref{lst:plot_eigen_spectra} and the code that constructed the complete figure can be seen in Figure [??] and the plot can be seen in Figure [??].
 		
+		\begin{figure}
+			\caption{Picture of the eigenvalue plot}
+		\end{figure}
 		
-		\item Suppose than an unstructured random matrix of the form considered by Allesian and Tang (i.e. a matrix leading to the circular eigenvalue spectrum in Figure 1a) is modified by having the elements of each row multiplied by a factor $R_j$, where $R_j \in [0, 2]$ is a uniform random variable chosen independently for each row. Evaluate the consequences of this modification for stability (in the sense of Allesian and Tang), in comparison to the roles of mutualism and predator-prey interactions.
+		From this plot we can see that in the case of Predator-Prey relationships the eigenvalues form an ellipse that this stretched along the imaginary axis and in the Mixture case we get an ellipse stretched along the real axis. Since we know from \citet{May1972} that stability arises when all eigenvalues have negative real parts we can easily see how, in the general case, predator prey relationships will tend towards stability because the ellipse, centred at ($-d$) only protrudes into the real axis by a small amount as compared to the mixture case. Consequently the likelihood of just one eigenvalue having a positive real part is much higher in the second case leading it to tend towards instability, whilst the predator-prey case tends towards stability. This is further borne out by the graph seen in Allesina and Tang.
+		
+		\item Suppose than an unstructured random matrix of the form considered by Allesina and Tang (i.e. a matrix leading to the circular eigenvalue spectrum in Figure 1a) is modified by having the elements of each row multiplied by a factor $R_j$, where $R_j \in [0, 2]$ is a uniform random variable chosen independently for each row. Evaluate the consequences of this modification for stability (in the sense of Allesina and Tang), in comparison to the roles of mixture and predator-prey interactions.
+		
+		The first thing to do in this case is to adapt the described process into the generation of our eigenvalues. This is reasonably easy to do and the code that achieves this is included in Figure [??]. This then results in the plot that can be seen in Figure [??], where we see, side by side, the comparison between augmenting and not-augmenting the matrix from which the eigenvalues are drawn. As we can see in the predator prey case there is little change to the likelihood of stability, because the stretch in the elipse is in the imaginary axis and if anything there's a higher concentration of augmented points in the stable zone. In the case of the mixture again the effect is higher in the stable zone but non-negligible in quadrants I and IV and we see this more in the random case where the effect is to change the shape of the spectra into more of an ellipse, more akin to the mixture case. This implies that changing the matrix so that there are some interactions that are relatively "stronger" than others rather breaks the model which is difficult because it's very possible in some ecosystems that some interactions would have a much larger effect than others say for example in an ecosystem where whales predate on plankton, the impact of one whale interaction with the plankton population is huge but the interaction of say one plankton with food source will be very small by comparison.  
 		
 		\item Consider the Thebault and Fontaine model of obligate mutualism used in James et al. (2012), as detailed in the Supplementary Information. The authors claim that (SI, p12.): 
 		
@@ -44,7 +55,28 @@
 		
 		Solve the system numerically and check whether this claim is true.
 		
+		In \citet{James2012} we see that the system being tested is the following:
+		
+		$$
+		\dfrac{1}{N_i} \dfrac{dN_i}{dt} = \alpha_i - \sum_{j \in P} \beta_{ij}N_j + \sum_{k \in A} \dfrac{A_{ik}\gamma_{ik}h_{ik}N_{k}}{1 + h_{ik}\sum_{l \in A}N_l}
+		$$
+		
+		Where $N_i$ is the population of plants of species $i$ and the rest of the terms are as defined in the paper. A symmetric equation exists for the animal species. Once we specialise this equation to the case of one plant and one animal we see that it reduces to the following set of equations: (here $P$ refers to the population of the single plant species and $A$ refers to the population of the single animal species)
+		
+		\begin{align*}
+		\dfrac{1}{P}\dfrac{dP}{dt} & = \alpha_{a_1} - \beta_{a_{11}}P + \dfrac{\gamma_{a_{11}}h_{a_{11}}A}{1 + h_{a_{11}}A} \\
+		\dfrac{1}{A}\dfrac{dA}{dt} & = \alpha_{b_1} - \beta_{b_{11}}A + \dfrac{\gamma_{b_{11}}h_{b_{11}}P}{1 + h_{b_{11}}P} 
+		\end{align*}
+		
+		Now the simplest way to verify the result in the question is to solve the systems for lots of different random parameters, within the limits set down in the paper, and then see if they lead to extinction. For the purposes of this we will suppose that extinction is determined by the physically reasonable fixed point being the trivial one (which must always exist by the form of the equations) and it being an attractor. The results of this can be seen in the pie chart in Figure [??] from where we can see that this occurs in 99\% of cases as required.
+		
+		\newpage
+		
 		\item Explain briefly why the models considered by Coyte et.al (2015) (as detailed in Section Method 1a of the Supplementary Material, pages 4 and 5) are vulnerable to the criticisms about diagonal elements in the Jacobian as outlined in James et. al (2015). Do the main conclusion of Coyte et al. (2015) change qualitatively when diagonal variability is added? Explain your answer with the support of appropriate numerical outputs.
+		
+		In \citet{James2015} they state that making the assumption, as May does in \cite{May1972}, that all the diagonal elements of a matrix will be the same as each other is where a method falls down. They state that introducing variability tends to increase the value of the leading eigenvalue, which could have consequences for stability as we'll see later. Also they state that from an ecological standpoint this kind of assumption is simply not valid, however the problem with Coyte's paper is that she makes this very same assumption by setting the value of $s_i = s$ for all values for $i$. Consequently it's vulnerable to the same criticism because it follows the same pattern as the systems describe in \citet{James2015}. 
+		
+		Coyte's main conclusion is two-fold in that co-operation has a destabilising influence in general and competition improves stability within the microbiome context she is working within. To introduce diagonal variability is reasonably easy because we can re-use the Allesina-Tang code and introduce the variability separately to see how this affects the outcome. This can be seen in Figure [??]
 		
 	\end{enumerate}
 	
@@ -52,5 +84,20 @@
 	\begin{appendices}
 		\chapter{Programming Code}
 		
+		\lstinputlisting[caption=This shows the code that generates the Allesina-Tang matrices that we are to investigate. The algorithm for generation is based heavily on the Supplementary Material in \cite{Allesina2012}., label=lst:generate_at_matrix]{../matlab_code/generate_at_matrix.m}
+		
+		\lstinputlisting[caption={This shows the code that generates large sets of eigenvalues, from matrices generated by \ref{lst:generate_at_matrix} for the plotting function in \ref{lst:plot_eigen_spectra} to act on}, label=lst:generate_eigenvalues]{../matlab_code/generate_eigenvalues.m}
+		
+		\newpage
+		
+		\lstinputlisting[caption={This shows the code that generates the plot of an eigenvalue spectra for specific set of eigenvalues, usually that are generated by \ref{lst:generate_eigenvalues}.}, label=lst:plot_eigen_spectra]{../matlab_code/plot_eigen_spectra.m}
+		
+		\lstinputlisting[caption={This shows the script that generates the figure as seen in [??].}, label=lst:construct_figure]{../matlab_code/construct_figure.m}
+		
 	\end{appendices}
+	
+	
+	\bibliographystyle{IEEEtranSN}
+	\bibliography{bibliography}
+	
 \end{document}
