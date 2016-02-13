@@ -7,9 +7,11 @@ set(f, 'Position', [100, 100, 1200, 400])
 critical_stabilities = [1, pi/(pi-2), pi/(pi+2)]; 
 initial_sigma = [0.1, 0.5, 0.1];
 titles = {'Random', 'Predator/Prey', 'Mixture'};
+% Set up the aspect ratio on the plots so that circles look like circles
+% rather than stretched ellipses.
+daspect([1,1,1]);
 % Iterate over the modes to generate, generate the eigenvalues and plot the
 % spectra, each in their own pane of the subplot.
-daspect([1,1,1]);
 for i=1:3
     subplot(1,3,i)
     hold on
