@@ -37,21 +37,37 @@
 		
 		[I.E. Show that under the assumptions of \cite{Allesina2012}, predator-prey interactions are stabilising, and mixture interactions are destabilising.]
 		
-		In order to verify the result of Allesina and Tang we first need to generate the same random matrices that they did so that we can produce eigen-spectra in a similar manner to ones they did. In order to do so we turn to the supplementary material \cite{Allesina2012} of the paper where there are instructions given as to how the matrices of each type are to be generated. The code that produces these matrices can be seen in Figure \ref{lst:generate_at_matrix}. Then using these generated matrices we can re-create the plots that are found in Figure 1 of \cite{Allesina2012}. The code that generated these plots can be seen in Figure \ref{lst:generate_eigenvalues} and \ref{lst:plot_eigen_spectra} and the code that constructed the complete figure can be seen in Figure [??] and the plot can be seen in Figure [??].
+		In order to verify the result of Allesina and Tang we first need to generate the same random matrices that they did so that we can produce eigen-spectra in a similar manner to ones they did. In order to do so we turn to the supplementary material \cite{Allesina2012} of the paper where there are instructions given as to how the matrices of each type are to be generated. The code that produces these matrices can be seen in Figure \ref{lst:generate_at_matrix}. Then using these generated matrices we can re-create the plots that are found in Figure 1 of \cite{Allesina2012}. The code that generated these plots can be seen in Figure \ref{lst:generate_eigenvalues} and \ref{lst:plot_eigen_spectra} and the code that constructed the complete figure can be seen in Figure \ref{lst:construct_figure} and the plot can be seen in Figure \ref{fig:a-t_related_plot}.
 		
-		\begin{figure}
-			\caption{Picture of the eigenvalue plot}
+		\begin{figure}[ht]
+			\begin{center}
+				\includegraphics[width=6.5in, clip]{images/a-t-plot.png}
+			\end{center}
+			\caption{A recreation of the figure seen in \citet{Allesina2012} showing that the tendency towards stability is more prevalent in the Predator-Prey case because the majority of the eigenvalues have negative real parts, as compared to the mixture case where there are a higher proportion of cases of eigenvalues having positive real parts. These plots were produced with the same values used in the original paper, i.e $S=250$, $C = 0.25$, $\sigma = 1$ and $d = 1$. The red line indicates the value of $-d$ to show the centre of the generated ellipses and the colours indicate the original 10 matrices from which these eigenvalues were drawn.}
+			\label{fig:a-t_related_plot}
 		\end{figure}
 		
-		From this plot we can see that in the case of Predator-Prey relationships the eigenvalues form an ellipse that this stretched along the imaginary axis and in the Mixture case we get an ellipse stretched along the real axis. Since we know from \citet{May1972} that stability arises when all eigenvalues have negative real parts we can easily see how, in the general case, predator prey relationships will tend towards stability because the ellipse, centred at ($-d$) only protrudes into the real axis by a small amount as compared to the mixture case. Consequently the likelihood of just one eigenvalue having a positive real part is much higher in the second case leading it to tend towards instability, whilst the predator-prey case tends towards stability. This is further borne out by the graph seen in Allesina and Tang.
+		From this plot we can see that in the case of Predator-Prey relationships the eigenvalues form an ellipse that this stretched along the imaginary axis and in the Mixture case we get an ellipse stretched along the real axis. Since we know from \citet{May1972} that stability arises when all eigenvalues have negative real parts we can easily see how, in the general case, predator prey relationships will tend towards stability because the ellipse, centred at ($-d$) only protrudes into the real axis by a small amount as compared to the mixture case. Consequently the likelihood of just one eigenvalue having a positive real part is much higher in the second case leading it to tend towards instability, whilst the predator-prey case tends towards stability for precisely the opposite reason. 
+		
+		Another way of thinking about it is that in order to shift towards a guarantee of stability the centre of the ellipse ($-d$) would only have to shifted slightly in the Predator/Prey case whereas the shift in the mixture case would have to be a lot more severe. This indicates that a higher proportion of the points lie to the right of the imaginary axis which supports the idea that more of the eigenvalues from the generated matrices have negative real parts. This is further borne out by the graph seen in Allesina and Tang in Figure 2 showing the hierarchy that their stability criteria entail.
 		
 		\item Suppose than an unstructured random matrix of the form considered by Allesina and Tang (i.e. a matrix leading to the circular eigenvalue spectrum in Figure 1a) is modified by having the elements of each row multiplied by a factor $R_j$, where $R_j \in [0, 2]$ is a uniform random variable chosen independently for each row. Evaluate the consequences of this modification for stability (in the sense of Allesina and Tang), in comparison to the roles of mixture and predator-prey interactions.
 		
-		The first thing to do in this case is to adapt the described process into the generation of our eigenvalues. This is reasonably easy to do and the code that achieves this is included in Figure [??]. This then results in the plot that can be seen in Figure [??], where we see, side by side, the comparison between augmenting and not-augmenting the matrix from which the eigenvalues are drawn. As we can see in the predator prey case there is little change to the likelihood of stability, because the stretch in the elipse is in the imaginary axis and if anything there's a higher concentration of augmented points in the stable zone. In the case of the mixture again the effect is higher in the stable zone but non-negligible in quadrants I and IV and we see this more in the random case where the effect is to change the shape of the spectra into more of an ellipse, more akin to the mixture case. This implies that changing the matrix so that there are some interactions that are relatively "stronger" than others rather breaks the model which is difficult because it's very possible in some ecosystems that some interactions would have a much larger effect than others say for example in an ecosystem where whales predate on plankton, the impact of one whale interaction with the plankton population is huge but the interaction of say one plankton with food source will be very small by comparison.  
+		The first thing to do in this case is to adapt the described process into the generation of our eigenvalues. This is reasonably easy to do and the code that achieves this is included in Figure \ref{lst:generate_eigenvalues_augmented}. This then results in the plot that can be seen in Figure \ref{fig:a-t_augmented_plot}, which is generated by a variant of the code in Figure \ref{lst:construct_figure} In the figure we see, in red, the original un-augmented eigenvalues and then in blue the augmented ones.
 		
-		\item Consider the Thebault and Fontaine model of obligate mutualism used in James et al. (2012), as detailed in the Supplementary Information. The authors claim that (SI, p12.): 
+		\begin{figure}[ht]
+			\begin{center}
+				\includegraphics[width=6.5in, clip]{images/a-t-plot_aug.png}
+			\end{center}
+			\caption{This is similar to the previous plot in that it shows the spectra of the eigenvalues plotted for 10 different random matrices but this time they have the described change made to them prior to plotting the eigenvalues. This shows that in general the ellipses are distorted little in terms of the height but much more so in their width, which leads to higher levels of instability in the random case. The other cases are included for comparison purposes.}
+			\label{fig:a-t_augmented_plot}
+		\end{figure}
 		
-		\emph{``Moreover, simple simulations on systems with only a single plant species show that an isolated mutualisitic pair of species, each with no other partners, has an extinction probability of over 99\%'' }
+		As we can see in the predator prey case there is little change to the likelihood of stability, because the stretch in the elipse is in the imaginary axis and if anything there's a higher concentration of augmented points in the stable zone. In the case of the mixture again the effect is higher in the stable zone but non-negligible in quadrants I and IV and we see this more in the random case where the effect is to change the shape of the spectra into more of an ellipse, more akin to the mixture case. This certainly means that the model does not hold because it implies that the perfect sphere shape of the ellipse relies on all of the interactions to be between populations of relatively the same size which is not always true in ecology. For instance there are often situations where a relatively populous creature predates or is predated upon by a much less populous creature. This implies that changing the matrix in this way creates violates the predictions of the model which casts doubt on it's validity for general ecosystems.
+		
+		\item Consider the Th\'ebault and Fontaine model of obligate mutualism used in James et al. (2012), as detailed in the Supplementary Information. The authors claim that (SI, p12.): 
+		
+		\emph{``Moreover, simple simulations on systems with only a single plant species show that an isolated mutualistic pair of species, each with no other partners, has an extinction probability of over 99\%'' }
 		
 		Solve the system numerically and check whether this claim is true.
 		
@@ -64,11 +80,40 @@
 		Where $N_i$ is the population of plants of species $i$ and the rest of the terms are as defined in the paper. A symmetric equation exists for the animal species. Once we specialise this equation to the case of one plant and one animal we see that it reduces to the following set of equations: (here $P$ refers to the population of the single plant species and $A$ refers to the population of the single animal species)
 		
 		\begin{align*}
-		\dfrac{1}{P}\dfrac{dP}{dt} & = \alpha_{a_1} - \beta_{a_{11}}P + \dfrac{\gamma_{a_{11}}h_{a_{11}}A}{1 + h_{a_{11}}A} \\
-		\dfrac{1}{A}\dfrac{dA}{dt} & = \alpha_{b_1} - \beta_{b_{11}}A + \dfrac{\gamma_{b_{11}}h_{b_{11}}P}{1 + h_{b_{11}}P} 
+		\dfrac{1}{P}\dfrac{dP}{dt} & = \alpha_{A} - \beta P + \dfrac{\gamma hA}{1 + hA} \\
+		\dfrac{1}{A}\dfrac{dA}{dt} & = \alpha_{P} - \beta A + \dfrac{\gamma hP}{1 + hP} 
 		\end{align*}
 		
-		Now the simplest way to verify the result in the question is to solve the systems for lots of different random parameters, within the limits set down in the paper, and then see if they lead to extinction. For the purposes of this we will suppose that extinction is determined by the physically reasonable fixed point being the trivial one (which must always exist by the form of the equations) and it being an attractor. The results of this can be seen in the pie chart in Figure [??] from where we can see that this occurs in 99\% of cases as required.
+		Now the simplest way to verify the result in the question is to solve the systems for lots of different random parameters, within the limits set down in the paper, and then see if they lead to extinction. Here we define extinction as having converged to the trivial fixed point $(0,0)$ which must be present in all the systems because of the $\dfrac{1}{A}$ or $\dfrac{1}{P}$ factor. The code that ran these experiments can be seen in Figure \ref{lst:generate_probability_estimate} with the code for the referenced \texttt{tfderivs} visible in Figure \ref{lst:tfderivs} and the outcome was a prediction of extinction at 97\% as can be seen from the output contained in Figure \ref{fig:estimate_probability}. This is obviously below the figure that the paper quotes however looking at the small set of examples that fail this test it's obvious why we don't reach the same conclusions.
+		
+		\begin{figure}[ht]
+			\begin{framed}
+				\begin{verbatim}
+>> [outs, fails] = construct_probability_estimate(100, 0.0001, 1000)
+>> outs
+				
+outs =
+	974    26
+				\end{verbatim}
+			\end{framed}
+			\caption{The output from the construction of the estimate of probability made by counting how many times the system converges to the trivial fixed point at (0,0) against the number of times it does not. Leading to a 97.4\% rate of extinction.}
+			\label{fig:estimate_probability}
+		\end{figure}
+		
+		The first reason is to do with the choice of a strong or weak interaction. From experimentation I've observed that this parameter is among the key factors that decide survival. In the code used here, if you repeat the experiment choosing always a weak interaction then you get an extinction rate of 100\% and always choosing a strong interaction the probability is much lower. If you then proceed to plot some of the strong interaction cases you can see that there emerges a situation where a non-trivial attracting fixed point appears in quadrant I and it's these situations that lead to the failures (an example of this can be seen in the plot in Figure \ref{fig:phase_plot}).
+		
+		\begin{figure}[ht]
+			\begin{center}
+				\includegraphics[width=6.5in, clip]{images/phase_portrait_failure.png}
+			\end{center}
+			\caption{This is the phase portrait for one of the failure cases from the random generation, as you can see, a positive fixed point has appeared in the quadrant I that is an attractor and so the convergence is towards that, and a stable coexistence rather than the extinction required.}
+			\label{fig:phase_plot}
+		\end{figure}
+		
+		
+		This is borne by evidence in the supplementary material (particularly in Figure S4) that shows that the probability of survival for a species with 1 partner under a weak interaction is very low compared to the strong interaction so all this is consistent with the models the paper considers. In addition to this, the deciding factor in the code written to generate the estimate, is a random number generator that should equally choose between both alternatives. Since the paper is unclear exactly how they chose the random parameter values that led to the 99\% figure it's to be assumed that this is where the disrepancy lies. 
+		
+		A second point is that there is at least one case where the convergence to the zero state is simply taking too long for us to simulate under the imposed conditions. For example in the paper they estimate it over 10000 time steps but that would take too long under with the computing hardware available, it leads to results like the following where the ode45 solution to the differential equations goes from being $(0.000181759015370329,	1.30532717081323e-07)$ at timestep 900 to $(0.000137379003631396,	4.44702545415763e-08)$ at timestep 1000. This is only a decrease of $5 \times 10^{-5}$ in the $P$ direction and $9 \times 10^{-8}$ in the $A$ direction over 100 timesteps, showing the slow rate of convergence. All this together contributes to the higher level of survival than would be expected according to \citet{James2012}.
 		
 		\newpage
 		
@@ -76,7 +121,15 @@
 		
 		In \citet{James2015} they state that making the assumption, as May does in \cite{May1972}, that all the diagonal elements of a matrix will be the same as each other is where a method falls down. They state that introducing variability tends to increase the value of the leading eigenvalue, which could have consequences for stability as we'll see later. Also they state that from an ecological standpoint this kind of assumption is simply not valid, however the problem with Coyte's paper is that she makes this very same assumption by setting the value of $s_i = s$ for all values for $i$. Consequently it's vulnerable to the same criticism because it follows the same pattern as the systems describe in \citet{James2015}. 
 		
-		Coyte's main conclusion is two-fold in that co-operation has a destabilising influence in general and competition improves stability within the microbiome context she is working within. To introduce diagonal variability is reasonably easy because we can re-use the Allesina-Tang code and introduce the variability separately to see how this affects the outcome. This can be seen in Figure [??]
+		Coyte's main conclusion is two-fold in that co-operation has a destabilising influence in general and competition improves stability within the microbiome context she is working within. To introduce diagonal variability is reasonably easy because we can re-use the Allesina-Tang code and introduce the variability separately to see how this affects the outcome. This can be seen in Figure \ref{fig:coyte_figure} (the code which augmented the diagonals can be see in Figure \ref{lst:generate_eigenvalues_diagvar}, the plot itself is generated by code very similar to \ref{lst:construct_figure}) which seems to suggest that there actually is very little quantitatively that changes when this is introduced. The large outliers that exist for the case where we have co-operation are still highly positive which shows that Coyte's general conclusions, based as they are on the position of these large outlying eigenvalues are still valid. In the same way that adding in the variability gives the competition little change either, the leading values are slightly more negative but this change is not significant. Overall it seems Coyte's conclusions are reasonably stable even when the diagonal variation is applied.
+		
+		\begin{figure}[ht]
+			\begin{center}
+				\includegraphics[width=6.5in, clip]{images/coyte-plot.png}
+			\end{center}
+			\caption{This shows the results of applying a similar augmentation to that used in \citet{James2015} and shows that there is a very small quantitative change but it's highly unremarkable.}
+			\label{fig:coyte_figure}
+		\end{figure}
 		
 	\end{enumerate}
 	
@@ -88,11 +141,18 @@
 		
 		\lstinputlisting[caption={This shows the code that generates large sets of eigenvalues, from matrices generated by \ref{lst:generate_at_matrix} for the plotting function in \ref{lst:plot_eigen_spectra} to act on}, label=lst:generate_eigenvalues]{../matlab_code/generate_eigenvalues.m}
 		
-		\newpage
-		
 		\lstinputlisting[caption={This shows the code that generates the plot of an eigenvalue spectra for specific set of eigenvalues, usually that are generated by \ref{lst:generate_eigenvalues}.}, label=lst:plot_eigen_spectra]{../matlab_code/plot_eigen_spectra.m}
 		
-		\lstinputlisting[caption={This shows the script that generates the figure as seen in [??].}, label=lst:construct_figure]{../matlab_code/construct_figure.m}
+		\lstinputlisting[caption={This code simply automates the plotting of the figure, by creating the required sets of eigenvalues, and sorting out the presentation of the subplot. The final figure can be seen in \ref{fig:a-t_related_plot}.}, label=lst:construct_figure]{../matlab_code/construct_figure.m}
+		
+		\lstinputlisting[caption={This code generates eigenvalues that come from the augmented matrices described in Q2. The augmentation is performed by creating matrices of scalars and then multiplying them element wise into the generated matrix.}, label=lst:generate_eigenvalues_augmented]{../matlab_code/generate_eigenvalues_augmented.m}
+		
+		\lstinputlisting[caption={This code shows the calculation of the derivative function in Question 3, all the parameters that are included as function parameters are dealt with by using a dummy function when it's passed into \texttt{ode45} as can be seen in }, label=lst:tfderivs]{../matlab_code/tfderivs.m}
+		
+		\lstinputlisting[caption={This code generates the probability estimates that are used to answer Q3. It runs 10 iterations of one set of random parameter values and the picks 100 sets of these random parameters leading to the conclusions it does.}, label=lst:generate_probability_estimate]{../matlab_code/construct_probability_estimate.m}
+		
+		\lstinputlisting[caption={This code generates the eigenvalues from matrices that have had their diagonals varied in a method similar to that described in \citet{James2015}. The variance of the non-diagonal elements is calculated then a randomly generated set of new diagonals is calculated from that variance and then added over the top of the old diagonals while retaining the rest of the elements.}, label=lst:generate_eigenvalues_diagvar]{../matlab_code/generate_eigenvalues_diagvar.m}
+		
 		
 	\end{appendices}
 	
