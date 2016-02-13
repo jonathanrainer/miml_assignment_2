@@ -80,8 +80,20 @@ function at_matrix = generate_at_matrix(matrix_size, c, d, mode, sigma)
             % distributed random numbers to produce the +/+ pairs required
             % in the matrix.
             at_matrix = ((creation_mask + creation_mask') .* norm_rnds);
+        % mode = 4 -> Competition
+        case 4
+            % Create a creation mask formed from the upper triangular part
+            % of the uniform_rands matrix, where the entries are less then
+            % or equal to C. 
+            creation_mask = triu(uniform_rands <=c, 1);
+            % Generate the random numbers to combine with the creation
+            % mask.
+            norm_rnds = -abs(normrnd(0,sigma,matrix_size,matrix_size));
+            % Multiply the mask and it's transpose by the normally
+            % distributed random numbers to produce the -/- pairs required
+            % in the matrix.
+            at_matrix = ((creation_mask + creation_mask') .* norm_rnds); 
     end
     % Set all the diagonals to -d within the matrix.
     at_matrix = at_matrix + (eye(matrix_size) .* -d);
 end
-
