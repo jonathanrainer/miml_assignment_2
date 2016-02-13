@@ -2,9 +2,9 @@ function [] = plot_eigen_spectra(eigenvalues, colour)
 %PLOT_EIGEN_SPECTRA Given a vector of eigenvales, plot their spectra.
 
     hold on
-    % Calculate the size of the plot which seems to scale with the square
-    % of the size of the matrix the eigenvalues came from, with an
-    % additional factor so it doesn't look squashed on the page.
+    % Calculate the size of the plot by looking at the minimum and maximum
+    % values of what's to be plotted and then adding a fudge factor so that
+    % it doesn't look squashed on the page.
     x_min = round(min(min(real(eigenvalues)))*1.2,2);
     x_max = round(max(max(real(eigenvalues)))*1.2,2);
     y_min = round(min(min(imag(eigenvalues)))*1.2,2);
@@ -27,8 +27,8 @@ function [] = plot_eigen_spectra(eigenvalues, colour)
     axis([x_min x_max y_min y_max])
     grid
     axis equal
-    % Add in markers to the scales so it's obvious how large or small the
-    % generate spectra are
+    % Try and calculate an appropriate step size for the ticks based on the
+    % range of the eigenvalues.
     if (abs(x_min) + abs(x_max) > 30)
         step_size_x = 10;
     else
@@ -39,6 +39,8 @@ function [] = plot_eigen_spectra(eigenvalues, colour)
     else
         step_size_y = 3;
     end
+    % Add in markers to the scales so it's obvious how large or small the
+    % generate spectra are
     set(gca,'xtick',x_min:step_size_x:x_max, ...
         'ytick',y_min:step_size_y:y_max);
     % Label the real and imaginary axis.
