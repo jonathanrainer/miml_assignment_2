@@ -24,9 +24,13 @@ function eigenvalues = generate_eigenvalues_diagvar(iterations, ...
         var_offd = var(elements);
         % Generate the augmented matrix by masking out all the non-diagonal
         % elements and then adding to them the identity matrix times a
-        % randomly generated matrix to give the diagonal coefficients.
+        % randomly generated matrix to give the diagonal coefficients. In
+        % addition you add a small amount to the diagonals so their sum is
+        % zero in line with the James paper.
+        amount_to_add = (-sum(var_offd))/matrix_size;
         M_aug = (~eye(matrix_size) .* M) + (normrnd(0,sqrt(var_offd), ...
-            matrix_size, matrix_size) .* eye(matrix_size));
+            matrix_size, matrix_size) .* eye(matrix_size)) + ...
+            + (eye(matrix_size) .* amount_to_add);
         eigenvalues(:,i) = eig(M_aug);
     end
 end
